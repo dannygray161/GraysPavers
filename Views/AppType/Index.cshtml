@@ -1,0 +1,64 @@
+﻿@model IEnumerable<AppType>
+
+<div class="container p-3">
+    <div class="row pt-4">
+        <div class="col-6">
+            <h2 class="text-primary">App Type List</h2>
+        </div>
+        <div class="col-6 text-right">
+            <a asp-controller="AppType" asp-action="Create" class="btn btn-primary">
+                <i class="fas fa-plus-square"></i> Create New App Type
+            </a>
+        </div>
+    </div>
+
+    <br />    <br />
+
+    @if (Model.Count() > 0)
+    {
+        <table class="table table-bordered table-striped " style="width: 100%">
+            <thead>
+                <tr>
+                    @*<th>
+                        App Id
+                    </th>*@
+                    <th>App Name</th>
+                    <th>Edit or Delete</th>
+                </tr>
+            </thead>
+            <tbody>
+
+                @foreach (var obj in Model)
+                {
+                    <tr>
+                        @*<td width="50%">@obj.AppId</td>*@
+                        <td width="50%">@obj.AppName</td>
+                        <td>
+                            <div class="btn-group w-75" role="group">
+                                <a asp-controller="AppType" asp-route-Id="@obj.AppId" asp-action="Edit" class="btn btn-primary mx-1">
+                                    <i class="far fa-edit"></i>Edit
+                                </a>
+                                <a asp-controller="AppType" asp-route-Id="@obj.AppId" asp-action="Delete" class="btn btn-danger mx-1">
+                                    <i class="far fa-trash-alt"></i>Delete
+                                </a>
+
+                            </div>
+                        </td>
+                    </tr>
+                }
+
+
+
+
+
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p>No App Type Exists</p>}
+
+
+
+
+</div>

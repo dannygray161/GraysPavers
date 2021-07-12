@@ -1,0 +1,52 @@
+﻿@model GraysPavers.Models.AppType
+
+<form method="post" asp-action="Delete">
+    <input asp-for="AppId" hidden/>
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="border p3">
+        <div class="form-group row">
+            <h2 class="text-info pl-3">Delete App Type</h2>
+        </div>
+
+        <div class="row">
+            <div class="col-8">
+                <div class="form-group row">
+                    <div class="col-4">
+                        <label asp-for="AppName"></label>
+                    </div>
+                    <div class="col-8">
+                        <input asp-for="AppName" disabled class="form-control"/>
+
+                    </div>
+
+                </div>
+
+                <div class="form-group row">
+                    <div class="col-8 offset-4 row">
+
+                        <div class="col">
+                            <input type="submit" asp-route-Id="@Model.AppId" asp-action="DeletePost" class="btn btn-danger w-100" value="Delete"/>
+
+                        </div>
+                        <div class="col">
+                            <a asp-action="Index" class="btn btn-success w-100">Back</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-4">
+                @* Keep this empty *@
+            </div>
+        </div>
+
+
+
+
+    </div>
+</form>
+@*Client Side Validation*@
+@section Scripts{
+    @{
+                                     <partial name="_ValidationScriptsPartial" />
+    }
+}

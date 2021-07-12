@@ -1,0 +1,113 @@
+﻿@model GraysPavers.Models.Product
+
+@{
+    var title = "Create Product";
+}
+
+<form method="post" enctype="multipart/form-data">
+    <input asp-for="CategoryId" hidden /> @*This is to mitigate errors when updating. Update has to have an id *@
+
+
+<div class="border p3">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="form-group row">
+        <h2 class="text-info pl-3">Delete Product</h2>
+    </div>
+
+    <div class="row">
+        <div class="col-8">
+            <div class="form-group row">
+                <div class="col-4">
+                    &nbsp;
+                    <label asp-for="ProductName"></label>
+                </div>
+                <div class="col-8">
+                    <input asp-for="ProductName" disabled class="form-control" />
+
+                </div>
+
+            </div>
+            <div class="form-group row">
+                <div class="col-4">
+                    <label asp-for="ProductPrice"></label>
+                </div>
+                <div class="col-8">
+                    <input asp-for="ProductPrice" diasbled class="form-control" />
+                </div>
+
+            </div>
+            <div class="form-group row">
+                <div class="col-4">
+                    <label asp-for="ProductDescription"></label>
+                </div>
+                <div class="col-8">
+                    <textarea asp-for="ProductDescription" class="form-control summernote"></textarea>
+                </div>
+
+            </div>
+            <div class="form-group row">
+                <div class="col-4">
+                    <label asp-for="CategoryId"></label>
+                </div>
+                <div class="col-8">
+                    <input asp-for="Category.CategoryName" diasbled class="form-control" />
+                </div>
+
+            </div>
+            <div class="form-group row">
+                <div class="col-4">
+                    <label asp-for="AppId"></label>
+                </div>
+                <div class="col-8">
+                    <input asp-for="AppType.AppName" diasbled class="form-control" />
+                </div>
+
+            </div>
+            <div class="form-group row">
+                <div class="col-8 offset-4 row">
+
+                    <div class="col">
+                       
+                        
+                        
+                            <button type="submit" class="btn btn-danger w-100" /> Delete
+
+                        
+
+                    </div>
+                    <div class="col">
+                        <a asp-action="Index" class="btn btn-success w-100">Back</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-3 offset-1 pt-4">
+            @if (Model.ProductId != 0)
+            {
+                <img src="@WebConstants.ImagePath@Model.Image" width="100%" style="border-radius:5px; border:1px solid #bbb" />
+
+            }
+
+        </div>
+    </div>
+
+
+
+
+</div>
+</form>
+@*Client Side Validation*@
+@section Scripts{
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    }
+    <script>
+        $(document).ready(function() {
+            $('.summernote').summernote({
+                height: 250,
+                disabled:true
+            });
+        });
+        
+    </script>
+}

@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using GraysPavers.Models;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -9,9 +8,10 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using GraysPavers.Data;
-using GraysPavers.Models.ViewModels;
-using GraysPavers.Utilities;
+using GraysPavers_DataAccess.Data;
+using GraysPavers_Models;
+using GraysPavers_Models.ViewModels;
+using GraysPavers_Utility;
 
 namespace GraysPavers.Controllers
 {

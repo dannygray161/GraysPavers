@@ -8,7 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using GraysPavers.Data;
+using GraysPavers_DataAccess.Data;
 using Microsoft.AspNetCore.Identity;
 //using Microsoft.AspNetCore.Identity.UI.Services;
 //using GraysPavers.Utilities;
@@ -17,7 +17,7 @@ namespace GraysPavers
 {
     using Microsoft.EntityFrameworkCore;
 
-    using GraysPavers.Data;
+    using GraysPavers_DataAccess.Data;
 
     public class Startup
     {

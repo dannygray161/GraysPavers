@@ -15,7 +15,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
-using GraysPavers.Models;
+using GraysPavers_Models;
+using GraysPavers_Utility;
 
 namespace GraysPavers.Areas.Identity.Pages.Account
 {

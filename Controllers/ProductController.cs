@@ -9,9 +9,10 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using GraysPavers.Data;
-using GraysPavers.Models;
-using GraysPavers.Models.ViewModels;
+using GraysPavers_DataAccess.Data;
+using GraysPavers_Models;
+using GraysPavers_Models.ViewModels;
+using GraysPavers_Utility;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace GraysPavers.Controllers

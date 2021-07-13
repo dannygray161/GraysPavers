@@ -5,8 +5,9 @@ using System.Linq;
 using System.Net.NetworkInformation;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
-using GraysPavers.Data;
-using GraysPavers.Models;
+using GraysPavers_DataAccess.Data;
+using GraysPavers_Models;
+using GraysPavers_Utility;
 
 namespace GraysPavers.Controllers
 {

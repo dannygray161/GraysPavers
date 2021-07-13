@@ -76,7 +76,7 @@
                         <label asp-for="Product.CategoryId"></label>
                     </div>
                     <div class="col-8">
-                        <select asp-for="Product.CategoryId" asp-items="@Model.CategorySelectList" class="form-control">
+                        <select asp-for="Product.CategoryId" asp-items="@Model.CategorySelectList" class="form-select">
                             <option disabled selected>--Select Category Type--</option>
                         </select>
                         <span asp-validation-for="Product.CategoryId" class="text-danger"></span>
@@ -88,7 +88,7 @@
                         <label asp-for="Product.AppId"></label>
                     </div>
                     <div class="col-8">
-                        <select asp-for="Product.AppId" asp-items="@Model.AppTypeSelectList" class="form-control">
+                        <select asp-for="Product.AppId" asp-items="@Model.AppTypeSelectList" class="form-select">
                             <option disabled selected>--Select App Type--</option>
                         </select>
                         <span asp-validation-for="Product.AppId" class="text-danger"></span>

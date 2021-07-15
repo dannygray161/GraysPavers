@@ -9,6 +9,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using GraysPavers_DataAccess.Data;
+using GraysPavers_DataAccess.Repository;
+using GraysPavers_DataAccess.Repository.IRepository;
 using Microsoft.AspNetCore.Identity;
 //using Microsoft.AspNetCore.Identity.UI.Services;
 //using GraysPavers.Utilities;
@@ -51,6 +53,9 @@ namespace GraysPavers
             // http context lets us access session, then we add session and configure
             //whatever options you want such as idle timeout, cookie http only and cookie required
             //along with any other options you may want
+            services.AddScoped<ICategoryRepository, CategoryRepository>();
+            services.AddScoped<IAppTypeRepository, AppTypeRepository>();
+            services.AddScoped<IProductRepository, ProductRepository>();
 
             #region Configuring DbContext Services/Creating Initial DB Cont'd
 

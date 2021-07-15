@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using GraysPavers_DataAccess.Data;
+using GraysPavers_DataAccess.Repository.IRepository;
 using GraysPavers_Models;
 using GraysPavers_Models.ViewModels;
 using GraysPavers_Utility;
@@ -40,12 +41,12 @@ namespace GraysPavers.Controllers
 
         #endregion
 
-        private readonly ApplicationDbContext _db; //create this so that we have an obj of applicationdbcontext
+        private readonly IProductRepository _prodRepo; //create this so that we have an obj of applicationdbcontext
         private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public ProductController(ApplicationDbContext db, IWebHostEnvironment webHostEnvironment)
+        public ProductController(IProductRepository prodRepo, IWebHostEnvironment webHostEnvironment)
         {
-            _db = db; // allows access to private readonly, .category method
+            _prodRepo=prodRepo; // allows access to private readonly, .category method
             _webHostEnvironment = webHostEnvironment;
         }
 
@@ -53,7 +54,7 @@ namespace GraysPavers.Controllers
         // Get for Index
         public IActionResult Index()
         {
-            IEnumerable<Product> objList = _db.Product.Include(c => c.Category).Include(a => a.AppType);
+            IEnumerable<Product> objList = _prodRepo.GetAll(includeProperties:"Category,AppType");
             //     ^^^^ this is eager loading. Much better than the way loading from the database is demonstrated below (foreach)
 
             //foreach (var obj in objList)
@@ -85,29 +86,21 @@ namespace GraysPavers.Controllers
         //Get for Upsert
         public IActionResult Upsert(int? id)
         {
-            IEnumerable<SelectListItem> CategoryDropDown = _db.Category.Select(i => new SelectListItem
-            {
-                Text = i.CategoryName,
-                Value = i.CategoryId.ToString()
-            });
+            //IEnumerable<SelectListItem> CategoryDropDown = _db.Category.Select(i => new SelectListItem
+            //{
+            //    Text = i.CategoryName,
+            //    Value = i.CategoryId.ToString()
+            //});
 
-            ViewBag.CategoryDropDown = CategoryDropDown;
+            //ViewBag.CategoryDropDown = CategoryDropDown;
 
             Product product = new Product();
 
             ProductViewModel productVM = new ProductViewModel()
             {
                 Product = new Product(),
-                CategorySelectList = _db.Category.Select(c => new SelectListItem
-                {
-                    Text = c.CategoryName,
-                    Value = c.CategoryId.ToString()
-                }),
-                AppTypeSelectList = _db.AppType.Select(i => new SelectListItem
-                {
-                    Text = i.AppName,
-                    Value = i.AppId.ToString()
-                })
+                CategorySelectList = _prodRepo.GetAllDropDown(WebConstants.CategoryName),
+                AppTypeSelectList = _prodRepo.GetAllDropDown(WebConstants.AppTypeName)
 
             }; // this loads category drop down list
 
@@ -118,7 +111,7 @@ namespace GraysPavers.Controllers
             }
             else
             {
-                productVM.Product = _db.Product.Find(id);
+                productVM.Product = _prodRepo.Find(id.GetValueOrDefault());
                 if (productVM.Product == null)
                 {
                     return NotFound();
@@ -158,13 +151,13 @@ namespace GraysPavers.Controllers
 
                     productVM.Product.Image = fileName + extension; // copies new path to image (new guid name and extension) not the constant path
 
-                    _db.Product.Add(productVM.Product);
+                    _prodRepo.Add(productVM.Product);
 
                 }
                 else
                 {
                     //updating
-                    var objFromDb = _db.Product.AsNoTracking().FirstOrDefault(u => u.ProductId == productVM.Product.ProductId); // as no tracking to avoid error of tracking mult objs
+                    var objFromDb = _prodRepo.FirstOrDefault(u => u.ProductId == productVM.Product.ProductId, isTracking:false); // as no tracking to avoid error of tracking mult objs
                     if (files.Count > 0)
                     {
                         string upload = webRootPath + WebConstants.ImagePath; // save image path to upload
@@ -192,25 +185,17 @@ namespace GraysPavers.Controllers
                         productVM.Product.Image = objFromDb.Image; // keeps old image if image wasnt updated but something else was
                     }
 
-                    _db.Product.Update(productVM.Product); // this updates everything that was changed in product
+                    _prodRepo.Update(productVM.Product); // this updates everything that was changed in product
                 }
 
-                _db.SaveChanges();
+                _prodRepo.Save();
                 return RedirectToAction("Index");
 
 
             }
 
-            productVM.CategorySelectList = _db.Category.Select(i => new SelectListItem
-            {
-                Text = i.CategoryName,
-                Value = i.CategoryId.ToString()
-            }); // again, load drop down to avoid weird scenario where it no load
-            productVM.AppTypeSelectList = _db.AppType.Select(i => new SelectListItem
-            {
-                Text = i.AppName,
-                Value = i.AppId.ToString()
-            });
+            productVM.CategorySelectList = _prodRepo.GetAllDropDown(WebConstants.CategoryName);
+            productVM.AppTypeSelectList = _prodRepo.GetAllDropDown(WebConstants.AppTypeName);
 
 
 
@@ -245,9 +230,9 @@ namespace GraysPavers.Controllers
                     return NotFound();
                 }
 
-                Product product = _db.Product.Include(u => u.Category)
-                    .Include(p => p.AppType)
-                    .FirstOrDefault(i => i.ProductId == id); // load product by id
+                Product product =
+                    _prodRepo.FirstOrDefault(u => u.ProductId == id, includeProperties: "Category,AppType");
+                    
                                                                                                                                         ////product.Category = _db.Category.Find(product.CategoryId); // load category associated with product ^^ this does it more efficiently
 
             if (product == null)
@@ -269,7 +254,7 @@ namespace GraysPavers.Controllers
             public IActionResult DeletePost(int? id)
             {
                 //server side validation
-                    var obj = _db.Product.Find(id); // looks for pkey value id (find only works with pkeys)
+                    var obj = _prodRepo.Find(id.GetValueOrDefault()); // looks for pkey value id (find only works with pkeys)
                     if (obj == null)
                     {
                         return NotFound();
@@ -286,8 +271,8 @@ namespace GraysPavers.Controllers
 
 
 
-                    _db.Product.Remove(obj);
-                    _db.SaveChanges();
+                    _prodRepo.Remove(obj);
+                    _prodRepo.Save();
                     return RedirectToAction("Index");
 
 

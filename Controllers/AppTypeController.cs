@@ -6,6 +6,7 @@ using System.Net.NetworkInformation;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using GraysPavers_DataAccess.Data;
+using GraysPavers_DataAccess.Repository.IRepository;
 using GraysPavers_Models;
 using GraysPavers_Utility;
 
@@ -15,16 +16,16 @@ namespace GraysPavers.Controllers
 
     public class AppTypeController : Controller
     {
-        private readonly ApplicationDbContext _db; //create this so that we have an obj of applicationdbcontext
+        private readonly IAppTypeRepository _appTypeRepo; //create this so that we have an obj of applicationdbcontext
 
-        public AppTypeController(ApplicationDbContext db)
+        public AppTypeController(IAppTypeRepository appTypeRepo)
         {
-            _db = db; // allows access to private readonly, .category method
+            _appTypeRepo = appTypeRepo; // allows access to private readonly, .category method
         }
 
         public IActionResult Index()
         {
-            IEnumerable<AppType> objList = _db.AppType;
+            IEnumerable<AppType> objList = _appTypeRepo.GetAll();
 
             return View(objList);
         }
@@ -34,7 +35,7 @@ namespace GraysPavers.Controllers
         // get for create
         public IActionResult Create()
         {
-            IEnumerable<AppType> objList = _db.AppType;
+            //IEnumerable<AppType> objList = _appTypeRepo.;
 
             #region Retreiving a list of categories
 
@@ -43,7 +44,7 @@ namespace GraysPavers.Controllers
              * through this list in order to get all categories.
              * so we create an IEnumerable of type categories
              * and assign it to our instance obj
-             * _db then .category in order to retrieve the categories.
+             * _appTypeRepo then .category in order to retrieve the categories.
              * then, all we do is return the objList. Done
              */
 
@@ -61,8 +62,8 @@ namespace GraysPavers.Controllers
         {
             if (ModelState.IsValid) // server side validation
             {
-                _db.AppType.Add(obj);
-                _db.SaveChanges();
+                _appTypeRepo.Add(obj);
+                _appTypeRepo.Save();
                 return RedirectToAction("Index");
             }
 
@@ -76,7 +77,7 @@ namespace GraysPavers.Controllers
              * through this list in order to get all categories.
              * so we create an IEnumerable of type categories
              * and assign it to our instance obj
-             * _db then .category in order to retrieve the categories.
+             * _appTypeRepo then .category in order to retrieve the categories.
              * then, all we do is return the objList. Done
              */
 
@@ -98,7 +99,7 @@ namespace GraysPavers.Controllers
                 return NotFound();
             }
 
-            var obj = _db.AppType.Find(id); // looks for pkey value id (find only works with pkeys)
+            var obj = _appTypeRepo.Find(id.GetValueOrDefault()); // looks for pkey value id (find only works with pkeys)
             if (obj == null)
             {
                 return NotFound();
@@ -116,8 +117,8 @@ namespace GraysPavers.Controllers
         {
             if (ModelState.IsValid)
             {
-                _db.AppType.Update(obj);
-                _db.SaveChanges();
+                _appTypeRepo.Update(obj);
+                _appTypeRepo.Save();
                 return RedirectToAction("Index");
 
             }
@@ -140,7 +141,7 @@ namespace GraysPavers.Controllers
                 return NotFound();
             }
 
-            var obj = _db.AppType.Find(id);
+            var obj = _appTypeRepo.Find(id.GetValueOrDefault());
             if (obj == null)
             {
                 return NotFound();
@@ -154,14 +155,14 @@ namespace GraysPavers.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult DeletePost(int? id)
         {
-            var obj = _db.AppType.Find(id);
+            var obj = _appTypeRepo.Find(id.GetValueOrDefault());
             if (id == null || id == 0)
             {
                 return NotFound();
             }
 
-            _db.AppType.Remove(obj);
-            _db.SaveChanges();
+            _appTypeRepo.Remove(obj);
+            _appTypeRepo.Save();
             return RedirectToAction("Index");
         }
 

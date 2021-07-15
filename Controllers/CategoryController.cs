@@ -5,14 +5,18 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using GraysPavers_DataAccess.Data;
+using GraysPavers_DataAccess.Repository.IRepository;
 using GraysPavers_Models;
+using GraysPavers_Utility;
 
 namespace GraysPavers.Controllers
 {
-    //[Authorize(Roles = WebConstants.AdminRole)]
+    [Authorize(Roles = WebConstants.AdminRole)]
 
     public class CategoryController : Controller
     {
+
+
         //dependency Injection Example
 
         #region Dependency Injection
@@ -26,24 +30,24 @@ namespace GraysPavers.Controllers
  *we have to inject into a ctor the class or interface name.
  *then we set _obj = obj creating the dependency and allowing us to access
  * an instance of the applicationdbcontext.
- * now we can use _db throughout our controller.
+ * now we can use _catRepo throughout our controller.
  * 
  */
 
         #endregion
 
-        private readonly ApplicationDbContext _db; //create this so that we have an obj of applicationdbcontext
+        private readonly ICategoryRepository _catRepo; //create this so that we have an obj of applicationdbcontext
 
-        public CategoryController(ApplicationDbContext db)
+        public CategoryController(ICategoryRepository catRepo)
         {
-            _db = db; // allows access to private readonly, .category method
+            _catRepo = catRepo; // allows access to private readonly, .category method
         }
 
 
         // Get for Index
         public IActionResult Index()
         {
-            IEnumerable<Category> objList = _db.Category;
+            IEnumerable<Category> objList = _catRepo.GetAll();
 
             #region Retreiving a list of categories
 
@@ -52,7 +56,7 @@ namespace GraysPavers.Controllers
              * through this list in order to get all categories.
              * so we create an IEnumerable of type categories
              * and assign it to our instance obj
-             * _db then .category in order to retrieve the categories.
+             * _catRepo then .category in order to retrieve the categories.
              * then, all we do is return the objList. Done
              */
 
@@ -66,7 +70,7 @@ namespace GraysPavers.Controllers
         //Get for Create
         public IActionResult Create()
         {
-            IEnumerable<Category> objList = _db.Category;
+            //IEnumerable<Category> objList = _catRepo.Category;
 
             #region Retreiving a list of categories
 
@@ -75,7 +79,7 @@ namespace GraysPavers.Controllers
              * through this list in order to get all categories.
              * so we create an IEnumerable of type categories
              * and assign it to our instance obj
-             * _db then .category in order to retrieve the categories.
+             * _catRepo then .category in order to retrieve the categories.
              * then, all we do is return the objList. Done
              */
 
@@ -94,8 +98,8 @@ namespace GraysPavers.Controllers
             //server side validation
             if (ModelState.IsValid)
             {
-                _db.Category.Add(obj);
-                _db.SaveChanges();
+                _catRepo.Add(obj);
+                _catRepo.Save();
                 return RedirectToAction("Index");
 
 
@@ -110,7 +114,7 @@ namespace GraysPavers.Controllers
              * through this list in order to get all categories.
              * so we create an IEnumerable of type categories
              * and assign it to our instance obj
-             * _db then .category in order to retrieve the categories.
+             * _catRepo then .category in order to retrieve the categories.
              * then, all we do is return the objList. Done
              */
 
@@ -131,7 +135,7 @@ namespace GraysPavers.Controllers
                     return NotFound();
                 }
 
-                var obj = _db.Category.Find(id); // looks for pkey value id (find only works with pkeys)
+                var obj = _catRepo.Find(id.GetValueOrDefault()); // looks for pkey value id (find only works with pkeys)
                 if (obj == null)
                 {
                     return NotFound();
@@ -151,8 +155,8 @@ namespace GraysPavers.Controllers
                 //server side validation
                 if (ModelState.IsValid)
                 {
-                    _db.Category.Update(obj);
-                    _db.SaveChanges();
+                    _catRepo.Update(obj);
+                    _catRepo.Save();
                     return RedirectToAction("Index");
 
 
@@ -173,7 +177,7 @@ namespace GraysPavers.Controllers
                     return NotFound();
                 }
 
-                var obj = _db.Category.Find(id); // looks for pkey value id (find only works with pkeys)
+                var obj = _catRepo.Find(id.GetValueOrDefault()); // looks for pkey value id (find only works with pkeys)
                 if (obj == null)
                 {
                     return NotFound();
@@ -191,13 +195,13 @@ namespace GraysPavers.Controllers
             public IActionResult DeletePost(int? id)
             {
                 //server side validation
-                    var obj = _db.Category.Find(id); // looks for pkey value id (find only works with pkeys)
+                    var obj = _catRepo.Find(id.GetValueOrDefault()); // looks for pkey value id (find only works with pkeys)
                     if (obj == null)
                     {
                         return NotFound();
                     }
-                    _db.Category.Remove(obj);
-                    _db.SaveChanges();
+                    _catRepo.Remove(obj);
+                    _catRepo.Save();
                     return RedirectToAction("Index");
 
 

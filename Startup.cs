@@ -11,7 +11,9 @@ using System.Threading.Tasks;
 using GraysPavers_DataAccess.Data;
 using GraysPavers_DataAccess.Repository;
 using GraysPavers_DataAccess.Repository.IRepository;
+using GraysPavers_Utility;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 
 namespace GraysPavers
 {
@@ -38,7 +40,7 @@ namespace GraysPavers
             
 
 
-            //services.AddTransient<IEmailSender, EmailSender>();
+            services.AddTransient<IEmailSender, EmailSender>();
 
             services.AddDistributedMemoryCache();
             services.AddHttpContextAccessor();

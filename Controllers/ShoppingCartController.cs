@@ -162,8 +162,9 @@ namespace GraysPavers.Controllers
                 };
 
                 _detailsRepo.Add(inquiryDetails);
-                _detailsRepo.Save();
             }
+            _detailsRepo.Save();
+
 
 
             return RedirectToAction(nameof(InquiryConfirmation));

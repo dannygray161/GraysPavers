@@ -12,8 +12,6 @@ using GraysPavers_DataAccess.Data;
 using GraysPavers_DataAccess.Repository;
 using GraysPavers_DataAccess.Repository.IRepository;
 using Microsoft.AspNetCore.Identity;
-//using Microsoft.AspNetCore.Identity.UI.Services;
-//using GraysPavers.Utilities;
 
 namespace GraysPavers
 {
@@ -56,6 +54,9 @@ namespace GraysPavers
             services.AddScoped<ICategoryRepository, CategoryRepository>();
             services.AddScoped<IAppTypeRepository, AppTypeRepository>();
             services.AddScoped<IProductRepository, ProductRepository>();
+            services.AddScoped<IInquiryHeaderRepository, InquiryHeaderRepository>();
+            services.AddScoped<IInquiryDetailsRepository, InquiryDetailsRepository>();
+            services.AddScoped<IApplicationUserRepository, ApplicationUserRepository>();
 
             #region Configuring DbContext Services/Creating Initial DB Cont'd
 

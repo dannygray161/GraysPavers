@@ -11,6 +11,8 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using GraysPavers_DataAccess.Data;
+using GraysPavers_DataAccess.Repository;
+using GraysPavers_DataAccess.Repository.IRepository;
 using GraysPavers_Models;
 using GraysPavers_Models.ViewModels;
 using GraysPavers_Utility;
@@ -20,15 +22,24 @@ namespace GraysPavers.Controllers
     [Authorize]
     public class ShoppingCartController : Controller
     {
-        private readonly ApplicationDbContext _db;
+        private readonly IProductRepository _prodRepo;
+        private readonly IApplicationUserRepository _userRepo;
+        private readonly IInquiryDetailsRepository _detailsRepo;
+        private readonly IInquiryHeaderRepository _headerRepo;
         private readonly IWebHostEnvironment _webHostEnvironment;
         private readonly IEmailSender _emailSender;
         [BindProperty]
         public ProductUserViewModel ProductUserViewModel { get; set; }
         
-        public ShoppingCartController(ApplicationDbContext db, IWebHostEnvironment webHostEnvironment, IEmailSender emailSender)
+        public ShoppingCartController(IInquiryHeaderRepository headerRepo,
+            IInquiryDetailsRepository detailsRepo,IProductRepository 
+                prodRepo,IApplicationUserRepository userRepo, 
+            IWebHostEnvironment webHostEnvironment, IEmailSender emailSender)
         {
-            _db = db;
+            _detailsRepo = detailsRepo;
+            _headerRepo = headerRepo;
+            _prodRepo = prodRepo;
+            _userRepo = userRepo;
             _webHostEnvironment = webHostEnvironment;
             _emailSender = emailSender;
         }
@@ -50,7 +61,7 @@ namespace GraysPavers.Controllers
 
             // selecting prod id and storing in a list of int, then creating a list of prod and comparing the ID we retrieved with existing ID's in prodInCart
             List<int> prodInCart = shoppingCartList.Select(i => i.ProductId).ToList();
-            IEnumerable<Product> productList = _db.Product.Where(u => prodInCart.Contains(u.ProductId));
+            IEnumerable<Product> productList = _prodRepo.GetAll(u => prodInCart.Contains(u.ProductId));
 
 
             return View(productList);
@@ -81,10 +92,10 @@ namespace GraysPavers.Controllers
 
             // selecting prod id and storing in a list of int, then creating a list of prod and comparing the ID we retrieved with existing ID's in prodInCart
             List<int> prodInCart = shoppingCartList.Select(i => i.ProductId).ToList();
-            IEnumerable<Product> productList = _db.Product.Where(u => prodInCart.Contains(u.ProductId));
+            IEnumerable<Product> productList = _prodRepo.GetAll(u => prodInCart.Contains(u.ProductId));
             ProductUserViewModel = new ProductUserViewModel()
             {
-                ApplicationUser = _db.ApplicationUser.FirstOrDefault((u => u.Id == claim.Value)),
+                ApplicationUser = _userRepo.FirstOrDefault((u => u.Id == claim.Value)),
                 ProductList = productList.ToList()
             };
 
@@ -99,6 +110,8 @@ namespace GraysPavers.Controllers
         [ActionName("Summary")]
         public async Task<IActionResult> SummaryPost(ProductUserViewModel productUserViewModel)
         {
+            var claimsIdentity = (ClaimsIdentity) User.Identity;
+            var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
 
             var pathtotemplate = _webHostEnvironment.WebRootPath + Path.DirectorySeparatorChar.ToString() +
                                  "templates" + Path.DirectorySeparatorChar.ToString() + "Inquiry.html";
@@ -124,7 +137,33 @@ namespace GraysPavers.Controllers
                 productUserViewModel.ApplicationUser.PhoneNumber, productListSB.ToString());
 
 
-            //await _emailSender.SendEmailAsync(WebConstants.AdminEmail, subject, messageBody);
+            await _emailSender.SendEmailAsync(WebConstants.AdminEmail, subject, messageBody);
+
+            InquiryHeader inquiryHeader = new InquiryHeader()
+            {
+                ApplicationUserId =  claim.Value,
+                FullName = ProductUserViewModel.ApplicationUser.FirstName + ProductUserViewModel.ApplicationUser.LastName,
+                Email = ProductUserViewModel.ApplicationUser.Email,
+                PhoneNumber = ProductUserViewModel.ApplicationUser.PhoneNumber,
+                InquiryDate = DateTime.Now
+                
+
+            };
+
+            _headerRepo.Add(inquiryHeader);
+            _headerRepo.Save();
+
+            foreach (var prod in ProductUserViewModel.ProductList)
+            {
+                InquiryDetails inquiryDetails = new InquiryDetails()
+                {
+                    InquiryHeaderId = inquiryHeader.InquiryId,
+                    ProductId = prod.ProductId
+                };
+
+                _detailsRepo.Add(inquiryDetails);
+                _detailsRepo.Save();
+            }
 
 
             return RedirectToAction(nameof(InquiryConfirmation));

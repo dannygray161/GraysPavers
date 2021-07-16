@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using GraysPavers_DataAccess.Data;
+using GraysPavers_DataAccess.Repository.IRepository;
 using GraysPavers_Models;
 using GraysPavers_Models.ViewModels;
 using GraysPavers_Utility;
@@ -18,20 +19,22 @@ namespace GraysPavers.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        private readonly ApplicationDbContext _db;
+        private readonly IProductRepository _prodRepo;
+        private readonly ICategoryRepository _catRepo;
+        public HomeController(ILogger<HomeController> logger, IProductRepository prodRepo, ICategoryRepository catRepo)
 
-        public HomeController(ILogger<HomeController> logger, ApplicationDbContext db)
         {
             _logger = logger;
-            _db = db;
+            _prodRepo = prodRepo;
+            _catRepo = catRepo;
         }
 
         public IActionResult Index()
         {
             HomePageViewModel homeVM = new HomePageViewModel
             {
-                Products = _db.Product.Include(c => c.Category).Include(a => a.AppType),
-                Categories = _db.Category
+                Products = _prodRepo.GetAll(includeProperties:"Category,AppType"),
+                Categories = _catRepo.GetAll()
             };
 
             return View(homeVM);
@@ -49,8 +52,8 @@ namespace GraysPavers.Controllers
 
             DetailsViewModel DetailsViewModel = new DetailsViewModel()
             {
-                Product = _db.Product.Include(c => c.Category).Include(a => a.AppType).Where(u => u.ProductId == id)
-                    .FirstOrDefault(),
+                Product = _prodRepo.FirstOrDefault(u => u.ProductId == id, includeProperties: "Category,AppType"),
+                    
                 ExistsInCart = false
 
                 /* here, we initialize detailsVM to a new instance, then we set product equal to _db.product (to retrieve from the database)

@@ -100,12 +100,16 @@ namespace GraysPavers.Controllers
             {
                 _catRepo.Add(obj);
                 _catRepo.Save();
+                TempData[WebConstants.Success] = "Category Added Successfully";
                 return RedirectToAction("Index");
 
 
             }
 
+            TempData[WebConstants.Error] = "I'm Sorry, there was an unexpected error. Please Try Again";
             return View(obj);
+
+
 
             #region Retreiving a list of categories
 
@@ -128,7 +132,7 @@ namespace GraysPavers.Controllers
         #region Edit Action
 
         // get for edit 
-            public IActionResult Edit(int? id)
+        public IActionResult Edit(int? id)
             {
                 if (id == null || id == 0) // looks for id if 0 or null, not found
                 {
@@ -157,10 +161,14 @@ namespace GraysPavers.Controllers
                 {
                     _catRepo.Update(obj);
                     _catRepo.Save();
+                    TempData[WebConstants.Success] = "Edited Successfully";
+
                     return RedirectToAction("Index");
 
 
                 }
+                TempData[WebConstants.Error] = "There was a problem, Please try again";
+
 
                 return View(obj);
             }
@@ -200,8 +208,16 @@ namespace GraysPavers.Controllers
                     {
                         return NotFound();
                     }
-                    _catRepo.Remove(obj);
-                    _catRepo.Save();
+                    else if (obj != null)
+                    {
+                        _catRepo.Remove(obj);
+                        _catRepo.Save();
+                        TempData[WebConstants.Success] = "Deleted Successfully";
+
+                    }
+                    TempData[WebConstants.Error] = "Error Deleting PLease try again";
+
+
                     return RedirectToAction("Index");
 
 

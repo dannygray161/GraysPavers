@@ -6,7 +6,7 @@
 }
 
 <form method="post" enctype="multipart/form-data">@* This "enctype multipart form-data is so the form can register images. if you do not have this they wont work" *@
-    @if ( Model.Product.ProductId != 0)
+    @if ( Model.Product.Id != 0)
     {
         title = "Edit Product";
         <input asp-for="Product.CategoryId" hidden /> @*This is to mitigate errors when updating. Update has to have an id *@
@@ -68,6 +68,8 @@
                     </div>
                     <div class="col-8">
                         <input type="file" name="files" id="uploadBox" multiple class="form-control" />
+                        <span asp-validation-for="Product.Image" class="text-danger"></span>
+
                     </div>
 
                 </div>
@@ -99,7 +101,7 @@
                     <div class="col-8 offset-4 row">
 
                         <div class="col">
-                            @if (Model.Product.ProductId != 0)
+                            @if (Model.Product.Id != 0)
                             {
                                 // this means we are updating
                                 <input type="submit" class="btn btn-info w-100" value="Update" />
@@ -120,7 +122,7 @@
                 </div>
             </div>
             <div class="col-3 offset-1 pt-4">
-                @if (Model.Product.ProductId != 0)
+                @if (Model.Product.Id != 0)
                 {
                     <img src="@WebConstants.ImagePath@Model.Product.Image" width="100%" style="border-radius:5px; border:1px solid #bbb"/>
 

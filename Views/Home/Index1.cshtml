@@ -1,0 +1,45 @@
+﻿@page
+@model GraysPavers.Views.Home.Index1Model
+<div class="container">
+    <div class="row">&nbsp;</div>
+
+    <div class="row">
+        <div class="col-2">User</div>
+        <div class="col-4"><input type="text" id="userInput" /></div>
+    </div>
+    &nbsp;
+    <div class="row">
+        <div class="col-2">Message</div>
+        <div class="col-3">
+            <textarea  class="form-control summernote" id="messageInput"></textarea>
+        </div>
+    </div>
+    <div class="row">&nbsp;</div>
+    <div class="row">
+        <div class="col-6">
+            <input type="button" id="sendButton" value="Send Message" />
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-12">
+        <hr />
+    </div>
+</div>
+<div class="row">
+    <div class="col-6">
+        <ul id="messagesList"></ul>
+    </div>
+</div>
+<script src="~/js/signalr/dist/browser/signalr.js"></script>
+<script src="~/js/chat.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
+
+<script>
+    $(document).ready(function() {
+        $('.summernote').summernote({
+            height: 250
+        });
+    });
+</script>
+

@@ -3,13 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31424.327
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GraysPavers", "GraysPavers.csproj", "{9FCEC3E0-BDA2-45F7-B35B-5A9BDF4CA638}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GraysPavers", "GraysPavers.csproj", "{9FCEC3E0-BDA2-45F7-B35B-5A9BDF4CA638}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GraysPavers_Utility", "..\GraysPavers_Utility\GraysPavers_Utility.csproj", "{00B47842-B4DA-47CB-862A-9E32E25F36F6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GraysPavers_Utility", "..\GraysPavers_Utility\GraysPavers_Utility.csproj", "{00B47842-B4DA-47CB-862A-9E32E25F36F6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GraysPavers_Models", "..\GraysPavers_Models\GraysPavers_Models.csproj", "{4A0B3917-160F-412C-BB91-6AE8F41A9828}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GraysPavers_Models", "..\GraysPavers_Models\GraysPavers_Models.csproj", "{4A0B3917-160F-412C-BB91-6AE8F41A9828}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GraysPavers_DataAccess", "..\GraysPavers_DataAccess\GraysPavers_DataAccess.csproj", "{A30746A2-4A0C-4AEC-A671-434BAF74A2B9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GraysPavers_DataAccess", "..\GraysPavers_DataAccess\GraysPavers_DataAccess.csproj", "{A30746A2-4A0C-4AEC-A671-434BAF74A2B9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -5,7 +5,7 @@
 
 <div class="">
     <form method="post">
-        <input asp-for="@Model.Product.ProductId" hidden/>
+        <input asp-for="@Model.Product.Id" hidden/>
 
         <div class="container backgroundWhite pt-4">
             <div class="card" style="border: 1px solid #000000;">
@@ -34,6 +34,22 @@
 
                                         <p class="text-secondary">@Html.Raw(Model.Product.ProductDescription)</p> @* here we have to use html raw because we are using the summernote *@
                                     </div>
+                                    @if (User.IsInRole(WebConstants.AdminRole))
+                                    {
+                                        <div class="col-12">SQFT:</div>
+                                        <div class="col-12">
+
+                                            @if (Model.ExistsInCart)
+                                            {
+                                                <input asp-for="@Model.Product.TempSqFt" disabled class="form-control"/>
+                                            }
+                                            else
+                                            {
+                                                <input asp-for="@Model.Product.TempSqFt" class="form-control"/>
+                                            }
+                                            <span asp-validation-for="@Model.Product.TempSqFt" class="text-danger"></span>
+                                        </div>
+                                    }
 
                                 </div>
                             </div>
@@ -49,13 +65,13 @@
 
                             @if (Model.ExistsInCart)
                             {
-                                <a asp-action="RemoveFromCart" asp-route-id="@Model.Product.ProductId" class="btn btn-warning btn-square form-control btn-lg" style="height: 50px;">Remove Item</a>
+                                <a asp-action="RemoveFromCart" asp-route-id="@Model.Product.Id" class="btn btn-warning btn-square form-control btn-lg" style="height: 50px;">Remove Item</a>
 
 
                             }
                             else
                             {
-                                <button type="submit" asp-route-id="@Model.Product.ProductId" class="btn btn-success form-control btn-lg" style="height: 50px;">Add to Cart</button>
+                                <button type="submit" asp-route-id="@Model.Product.Id" class="btn btn-success form-control btn-lg" style="height: 50px;">Add to Cart</button>
 
                             }
 

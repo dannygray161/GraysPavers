@@ -3,6 +3,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components.Forms;
@@ -13,6 +14,7 @@ using GraysPavers_DataAccess.Repository.IRepository;
 using GraysPavers_Models;
 using GraysPavers_Models.ViewModels;
 using GraysPavers_Utility;
+using Newtonsoft.Json;
 
 namespace GraysPavers.Controllers
 {
@@ -39,6 +41,20 @@ namespace GraysPavers.Controllers
 
             return View(homeVM);
         }
+        public IActionResult Index1()
+        {
+           
+
+            return View(nameof(Index1));
+        }
+
+        public IActionResult ChatNotLoggedIn()
+        {
+            TempData[WebConstants.Error] = "Please Sign In";
+            
+
+            return RedirectToAction("Index");
+        }
 
         public IActionResult Details(int id)
         {
@@ -52,7 +68,7 @@ namespace GraysPavers.Controllers
 
             DetailsViewModel DetailsViewModel = new DetailsViewModel()
             {
-                Product = _prodRepo.FirstOrDefault(u => u.ProductId == id, includeProperties: "Category,AppType"),
+                Product = _prodRepo.FirstOrDefault(u => u.Id == id, includeProperties: "Category,AppType"),
                     
                 ExistsInCart = false
 
@@ -68,7 +84,7 @@ namespace GraysPavers.Controllers
             };
             foreach (var item in shoppingcartlist)
             {
-                if (item.ProductId == id)
+                if (item.Id == id)
                 {
                     // item exists in cart so we have to set the flag to true
                     DetailsViewModel.ExistsInCart = true;
@@ -78,7 +94,7 @@ namespace GraysPavers.Controllers
         }
 
         [HttpPost, ActionName("Details")]
-        public IActionResult DetailsPost(int id)
+        public IActionResult DetailsPost(int id, DetailsViewModel detailsViewModel)
         {
             //see txt file for explanation
 
@@ -88,8 +104,9 @@ namespace GraysPavers.Controllers
             {
                 shoppingcartlist = HttpContext.Session.Get<List<ShoppingCart>>(WebConstants.SessionCart);
             }
-            shoppingcartlist.Add(new ShoppingCart { ProductId = id });
+            shoppingcartlist.Add(new ShoppingCart { Id = id, SqFt = detailsViewModel.Product.TempSqFt});
             HttpContext.Session.Set(WebConstants.SessionCart, shoppingcartlist);
+            TempData[WebConstants.Success] = "Added To Cart";
             return RedirectToAction(nameof(Index));
 
         }
@@ -104,10 +121,11 @@ namespace GraysPavers.Controllers
                 shoppingcartlist = HttpContext.Session.Get<List<ShoppingCart>>(WebConstants.SessionCart);
             }
 
-            var itemToRemove = shoppingcartlist.SingleOrDefault(i => i.ProductId == id);
+            var itemToRemove = shoppingcartlist.SingleOrDefault(i => i.Id == id);
             if (itemToRemove != null)
             {
                 shoppingcartlist.Remove(itemToRemove);
+                TempData[WebConstants.Success] = "Item Removed";
             }
 
 
@@ -126,5 +144,7 @@ namespace GraysPavers.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+
+
     }
 }

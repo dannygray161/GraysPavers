@@ -40,11 +40,54 @@ namespace GraysPavers.Controllers
         {
             InquiryViewModel = new InquiryViewModel()
             {
-                InquiryHeader = _headerRepo.FirstOrDefault(u => u.InquiryId == id),
+                InquiryHeader = _headerRepo.FirstOrDefault(u => u.Id == id),
                 InquiryDetails = _detailsRepo.GetAll(u => u.InquiryHeaderId == id, includeProperties: "Product")
 
             };
             return View(InquiryViewModel);
+        }
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Details()
+        {
+            List<ShoppingCart> shoppingCartList = new List<ShoppingCart>();
+            InquiryViewModel.InquiryDetails =
+                _detailsRepo.GetAll(u => u.InquiryHeaderId == InquiryViewModel.InquiryHeader.Id);
+
+
+            foreach (var detail in InquiryViewModel.InquiryDetails)
+            {
+                ShoppingCart shoppingCart = new ShoppingCart()
+                {
+                    Id = detail.ProductId
+                };
+                shoppingCartList.Add(shoppingCart);
+            }
+            HttpContext.Session.Clear();
+            HttpContext.Session.Set(WebConstants.SessionCart, shoppingCartList);
+            HttpContext.Session.Set(WebConstants.SessionInquiryId, InquiryViewModel.InquiryHeader.Id);
+
+            return RedirectToAction("Index", "ShoppingCart");
+        }
+
+
+
+        [HttpPost]
+        public IActionResult Delete()
+        {
+            InquiryHeader inquiryHeader = _headerRepo.FirstOrDefault(u => u.Id == InquiryViewModel.InquiryHeader.Id);
+            IEnumerable<InquiryDetails> inquiryDetails =
+                _detailsRepo.GetAll(u => u.InquiryHeaderId == InquiryViewModel.InquiryHeader.Id);
+
+            _detailsRepo.RemoveRange(inquiryDetails);
+            _headerRepo.Remove(inquiryHeader);
+            _headerRepo.Save();
+
+
+
+            return RedirectToAction(nameof(Index));
         }
 
         #region API Calls
@@ -52,7 +95,7 @@ namespace GraysPavers.Controllers
         [HttpGet]
         public IActionResult GetInquiryList()
         {
-            return Json(new {data = _headerRepo.GetAll()});
+            return Json(new { data = _headerRepo.GetAll() });
         }
 
         #endregion

@@ -46,7 +46,7 @@ namespace GraysPavers.Controllers
 
         public ProductController(IProductRepository prodRepo, IWebHostEnvironment webHostEnvironment)
         {
-            _prodRepo=prodRepo; // allows access to private readonly, .category method
+            _prodRepo = prodRepo; // allows access to private readonly, .category method
             _webHostEnvironment = webHostEnvironment;
         }
 
@@ -137,7 +137,7 @@ namespace GraysPavers.Controllers
                 var files = HttpContext.Request.Form.Files; // allows us to store image
                 string webRootPath = _webHostEnvironment.WebRootPath;
 
-                if (productVM.Product.ProductId == 0)
+                if (productVM.Product.Id == 0)
                 {
                     //creating and storing the file 
                     string upload = webRootPath + WebConstants.ImagePath;
@@ -152,12 +152,14 @@ namespace GraysPavers.Controllers
                     productVM.Product.Image = fileName + extension; // copies new path to image (new guid name and extension) not the constant path
 
                     _prodRepo.Add(productVM.Product);
+                    TempData[WebConstants.Success] = "Product Added Successfully";
+
 
                 }
                 else
                 {
                     //updating
-                    var objFromDb = _prodRepo.FirstOrDefault(u => u.ProductId == productVM.Product.ProductId, isTracking:false); // as no tracking to avoid error of tracking mult objs
+                    var objFromDb = _prodRepo.FirstOrDefault(u => u.Id == productVM.Product.Id, isTracking:false); // as no tracking to avoid error of tracking mult objs
                     if (files.Count > 0)
                     {
                         string upload = webRootPath + WebConstants.ImagePath; // save image path to upload
@@ -186,6 +188,8 @@ namespace GraysPavers.Controllers
                     }
 
                     _prodRepo.Update(productVM.Product); // this updates everything that was changed in product
+                    TempData[WebConstants.Success] = "Product Updated Successfully";
+
                 }
 
                 _prodRepo.Save();
@@ -193,6 +197,8 @@ namespace GraysPavers.Controllers
 
 
             }
+            TempData[WebConstants.Error] = "Error Please try again";
+
 
             productVM.CategorySelectList = _prodRepo.GetAllDropDown(WebConstants.CategoryName);
             productVM.AppTypeSelectList = _prodRepo.GetAllDropDown(WebConstants.AppTypeName);
@@ -231,7 +237,7 @@ namespace GraysPavers.Controllers
                 }
 
                 Product product =
-                    _prodRepo.FirstOrDefault(u => u.ProductId == id, includeProperties: "Category,AppType");
+                    _prodRepo.FirstOrDefault(u => u.Id == id, includeProperties: "Category,AppType");
                     
                                                                                                                                         ////product.Category = _db.Category.Find(product.CategoryId); // load category associated with product ^^ this does it more efficiently
 
@@ -266,14 +272,22 @@ namespace GraysPavers.Controllers
                     if (System.IO.File.Exists(oldFile)) // check if exists
                     {
                         System.IO.File.Delete(oldFile); // if exists delete it
+                        _prodRepo.Remove(obj);
+                        _prodRepo.Save();
+                        TempData[WebConstants.Success] = "Deleted Successfully";
+
+
+
+
                     }
+                    TempData[WebConstants.Error] = "Error Please try again";
 
 
 
 
-                    _prodRepo.Remove(obj);
-                    _prodRepo.Save();
-                    return RedirectToAction("Index");
+
+
+                 return RedirectToAction("Index");
 
 
                 

@@ -64,8 +64,12 @@ namespace GraysPavers.Controllers
             {
                 _appTypeRepo.Add(obj);
                 _appTypeRepo.Save();
+                TempData[WebConstants.Success] = "AppType Added Successfully";
+
                 return RedirectToAction("Index");
             }
+            TempData[WebConstants.Error] = "Error, Please try again";
+
 
             return View(obj);
 
@@ -119,9 +123,13 @@ namespace GraysPavers.Controllers
             {
                 _appTypeRepo.Update(obj);
                 _appTypeRepo.Save();
+                TempData[WebConstants.Success] = "Edited Successfully";
+
                 return RedirectToAction("Index");
 
             }
+            TempData[WebConstants.Error] = "Error Please try again";
+
 
             return View(obj);
 
@@ -160,9 +168,18 @@ namespace GraysPavers.Controllers
             {
                 return NotFound();
             }
+            else if (obj != null)
+            {
+                _appTypeRepo.Remove(obj);
+                _appTypeRepo.Save();
+                TempData[WebConstants.Success] = "Deleted Successfully";
 
-            _appTypeRepo.Remove(obj);
-            _appTypeRepo.Save();
+            }
+            TempData[WebConstants.Error] = "Error PLease try again";
+
+
+
+
             return RedirectToAction("Index");
         }
 

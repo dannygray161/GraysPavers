@@ -17,6 +17,7 @@ using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
 using GraysPavers_Models;
 using GraysPavers_Utility;
+using Microsoft.EntityFrameworkCore;
 
 namespace GraysPavers.Areas.Identity.Pages.Account
 {
@@ -94,14 +95,7 @@ namespace GraysPavers.Areas.Identity.Pages.Account
 
         public async Task OnGetAsync(string returnUrl = null)
         {
-            if (!await _roleManager.RoleExistsAsync(WebConstants.AdminRole))
-            {
-                // check if role exists, if not create one
-                await _roleManager.CreateAsync(new IdentityRole(WebConstants.AdminRole));
-                await _roleManager.CreateAsync(new IdentityRole(WebConstants.CustomerRole));
-
-                // this will only be executed ONE time. 
-            }
+           
 
             ReturnUrl = returnUrl;
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
@@ -152,11 +146,13 @@ namespace GraysPavers.Areas.Identity.Pages.Account
                     {
                         if (!User.IsInRole(WebConstants.AdminRole))
                         {
-                            await _signInManager.SignInAsync(user, isPersistent: false);
-
+                            Console.WriteLine($"{user.FullName} has been registered!");
+                            return RedirectToAction("Index", "Home");
                         }
                         else
                         {
+                            await _signInManager.SignInAsync(user, isPersistent: false);
+
                             return RedirectToAction("Index");
                         }
                         return LocalRedirect(returnUrl);

@@ -262,17 +262,25 @@ namespace GraysPavers.Controllers
                     }
                 };
                 var gateWay = _braintreeGate.GetGateway();
-                Result<Transaction> result = gateWay.Transaction.Sale(request);
+                Result<Transaction> result = await gateWay.Transaction.SaleAsync(request);
+                try
+                {
+                    if (result.Target.ProcessorResponseText == "Approved")
+                    {
+                        orderHeader.TransactionId = result.Target.Id;
+                        orderHeader.OrderStatus = WebConstants.StatusApproved;
+                    }
+                    else
+                    {
+                        orderHeader.OrderStatus = WebConstants.StatusCancelled;
+                    }
 
-                if (result.Target.ProcessorResponseText == "Approved")
-                {
-                    orderHeader.TransactionId = result.Target.Id;
-                    orderHeader.OrderStatus = WebConstants.StatusApproved;
                 }
-                else
+                catch (Exception e)
                 {
-                    orderHeader.OrderStatus = WebConstants.StatusCancelled;
+                    Console.WriteLine("Unexpected Error, Please Try Again");
                 }
+
                 _headerRepo.Save();
 
 

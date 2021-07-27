@@ -11,7 +11,7 @@
                 <div class="card-header bg-dark text-light ml-0 row container">
                     <div class="col-6">
                         <i class="fa fa-shopping-cart"></i> &nbsp;
-                        Order Summary
+                        Order Summary     <hr/>      * Denotes Required Fields
                     </div>
                     <div class="col-6 text-right">
                         <a asp-action="Index" class="btn btn-outline-info btn-sm">Back to Cart</a>
@@ -24,90 +24,90 @@
                                 <div class="row">
                                     <h4 class="d-flex justify-content-between align-items-center mb-3">
                                         <span class="text-info">Customer Details:</span>
+                                        
                                     </h4>
                                 </div>
                                 <div class="row my-1">
                                     <div class="col-3">
-                                        <label> First Name</label>
+                                        <label> First Name*</label>
                                     </div>
                                     <div class="col-9">
                                         <input asp-for="ApplicationUser.FirstName" required type="text" class="form-control" />
-                                        <span asp-validation-for="ApplicationUser.FirstName" class="text-danger"></span>
+                                        @*<span asp-validation-for="ApplicationUser.FirstName" class="text-danger"></span>*@
                                     </div>
                                 </div>
                                 <div class="row my-1">
                                     <div class="col-3">
-                                        <label>Last Name</label>
+                                        <label>Last Name*</label>
                                     </div>
                                     <div class="col-9">
                                         <input asp-for="ApplicationUser.LastName" required type="text" class="form-control" />
-                                        <span asp-validation-for="ApplicationUser.LastName" class="text-danger"></span>
+                                        @*<span asp-validation-for="ApplicationUser.LastName" class="text-danger"></span>*@
 
                                     </div>
                                 </div>
                                 <div class="row my-1">
                                     <div class="col-3">
-                                        <label>Phone Number</label>
+                                        <label>Phone Number*</label>
                                     </div>
                                     <div class="col-9">
                                         <input asp-for="ApplicationUser.PhoneNumber" required type="text" class="form-control" />
-                                        <span asp-validation-for="ApplicationUser.PhoneNumber" class="text-danger"></span>
+                                        @*<span asp-validation-for="ApplicationUser.PhoneNumber" class="text-danger"></span>*@
                                     </div>
                                 </div>
                                 <div class="row my-1">
                                     <div class="col-3">
-                                        <label>Email</label>
+                                        <label>Email*</label>
                                     </div>
                                     <div class="col-9">
                                         <input asp-for="ApplicationUser.Email" required type="text" class="form-control" />
-                                        <span asp-validation-for="ApplicationUser.Email" class="text-danger"></span>
+                                        @*<span asp-validation-for="ApplicationUser.Email" class="text-danger"></span>*@
                                     </div>
                                 </div>
                                 @if (User.IsInRole(WebConstants.AdminRole))
                                 {
                                     <div class="row my-1">
                                         <div class="col-3">
-                                            <label>Address Line 1</label>
+                                            <label>Address Line 1*</label>
                                         </div>
                                         <div class="col-9">
                                             <input asp-for="ApplicationUser.AddressLine1" required type="text" class="form-control" />
-                                            <span asp-validation-for="ApplicationUser.AddressLine1" class="text-danger"></span>
+                                            @*<span asp-validation-for="ApplicationUser.AddressLine1" class="text-danger"></span>*@
                                         </div>
                                     </div>
                                     <div class="row my-1">
                                         <div class="col-3">
-                                            <label>Address Line 2</label>
+                                            <label>Address Line 2 (Optional)</label>
                                         </div>
                                         <div class="col-9">
-                                            <input asp-for="ApplicationUser.AddressLine2"  type="text" class="form-control" />
-                                            <span asp-validation-for="ApplicationUser.AddressLine2" class="text-danger"></span>
+                                            <input asp-for="ApplicationUser.AddressLine2" type="text" class="form-control" />
                                         </div>
                                     </div>
                                     <div class="row my-1">
                                         <div class="col-3">
-                                            <label>City</label>
+                                            <label>City*</label>
                                         </div>
                                         <div class="col-9">
                                             <input asp-for="ApplicationUser.City" required type="text" class="form-control" />
-                                            <span asp-validation-for="ApplicationUser.City" class="text-danger"></span>
+                                            @*<span asp-validation-for="ApplicationUser.City" class="text-danger"></span>*@
                                         </div>
                                     </div>
                                     <div class="row my-1">
                                         <div class="col-3">
-                                            <label>State</label>
+                                            <label>State*</label>
                                         </div>
                                         <div class="col-9">
                                             <input asp-for="ApplicationUser.State" required type="text" class="form-control" />
-                                            <span asp-validation-for="ApplicationUser.State" class="text-danger"></span>
+                                            @*<span asp-validation-for="ApplicationUser.State" class="text-danger"></span>*@
                                         </div>
                                     </div>
                                     <div class="row my-1">
                                         <div class="col-3">
-                                            <label>ZIP Code</label>
+                                            <label>ZIP Code*</label>
                                         </div>
                                         <div class="col-9">
                                             <input asp-for="ApplicationUser.ZipCode" required type="text" class="form-control" />
-                                            <span asp-validation-for="ApplicationUser.ZipCode" class="text-danger"></span>
+                                            @*<span asp-validation-for="ApplicationUser.ZipCode" class="text-danger"></span>*@
                                         </div>
                                     </div>
 
@@ -115,7 +115,7 @@
 
 
                                 }
-                              
+
                             </div>
                             <div class="col-12 col-lg-5 row">
                                 <div class="col-12">
@@ -128,10 +128,10 @@
                                         }
                                         @for (int i = 0; i < Model.ProductList.Count(); i++)
                                         {
-                                            <input type="hidden" asp-for="@Model.ProductList[i].Id"/>
-                                            <input type="hidden" asp-for="@Model.ProductList[i].ProductName"/>
-                                            <input type="hidden" asp-for="@Model.ProductList[i].ProductPrice"/>
-                                            <input type="hidden" asp-for="@Model.ProductList[i].TempSqFt"/>
+                                            <input type="hidden" asp-for="@Model.ProductList[i].Id" />
+                                            <input type="hidden" asp-for="@Model.ProductList[i].ProductName" />
+                                            <input type="hidden" asp-for="@Model.ProductList[i].ProductPrice" />
+                                            <input type="hidden" asp-for="@Model.ProductList[i].TempSqFt" />
                                             <li class="list-group-item d-flex justify-content-between">
                                                 <div>
                                                     <h6 class="my-0">@Model.ProductList[i].ProductName</h6>
@@ -166,12 +166,12 @@
                                 @if (User.IsInRole(WebConstants.AdminRole))
                                 {
                                     <div class="col-12">
-                                    <div class="wrapper">
-                                        <div class="checkout container">
-                                            <div id="dropin-container"></div>
-                                            <input id="nonce" name="payment_method_nonce" type="hidden"/>
+                                        <div class="wrapper">
+                                            <div class="checkout container">
+                                                <div id="dropin-container"></div>
+                                                <input id="nonce" name="payment_method_nonce" type="hidden" />
+                                            </div>
                                         </div>
-                                    </div>
                                     </div>
                                 }
                             </div>
@@ -183,12 +183,12 @@
                         <div class="col-12 col-md-5 offset-md-7">
                             @if (User.IsInRole(WebConstants.AdminRole))
                             {
-                                <button id="submit-button" class="btn btn-success form-control">Submit Order</button>
+                                <button class="btn btn-success form-control" onclick="return validationAdmin()" id="submit-button"   >Submit Order</button>
 
                             }
                             else
                             {
-                                <button type="submit" class="btn btn-primary form-control">Submit Inquiry</button>
+                                <button type="submit" onclick="return validationCustomer()" class="btn btn-primary form-control" >Submit Inquiry</button>
 
                             }
                         </div>
@@ -204,7 +204,7 @@
     <partial name="_ValidationScriptsPartial" />
     <script src="https://js.braintreegateway.com/web/dropin/1.31.0/js/dropin.min.js"></script>
 
-    
+
     <script>
 
         var client_token = "@ViewBag.ClientToken";
@@ -218,7 +218,7 @@
                 form.addEventListener('submit',
                     function () {
                         event.preventDefault();
-                        //add the nonce and submit 
+                        //add the nonce and submit
 
 
 
@@ -236,10 +236,50 @@
                     });
             });
 
+    </script>
+    <script>
+        function validationAdmin() {
+            var fname = document.getElementById("ApplicationUser_FirstName").value;
+            var lname = document.getElementById("ApplicationUser_LastName").value;
+            var email = document.getElementById("ApplicationUser_Email").value;
+            var phonenumber = document.getElementById("ApplicationUser_PhoneNumber").value;
+            var address = document.getElementById("ApplicationUser_PhoneNumber").value;
+            var city = document.getElementById("ApplicationUser_PhoneNumber").value;
+            var state = document.getElementById("ApplicationUser_PhoneNumber").value;
+            var zip = document.getElementById("ApplicationUser_PhoneNumber").value;
+            if (fname === '' || email === '' || phonenumber === '' || lname === '' || address === '' || city === '' || state === '' || zip === '') {
 
+                bootbox.alert({
+                    message: "Please Fill Out All Fields!!!",
+                    className: 'rubberBand animated'
+                });
 
+                //alert("Please fill all fields...!!!!!!");
+                return false;
+            } 
+            else {
+                return true;
+            }
+        }
+        function validationCustomer() {
+            var fname = document.getElementById("ApplicationUser_FirstName").value;
+            var lname = document.getElementById("ApplicationUser_LastName").value;
+            var email = document.getElementById("ApplicationUser_Email").value;
+            var phonenumber = document.getElementById("ApplicationUser_PhoneNumber").value;
+            if (fname === '' || email === '' || phonenumber === '' || lname === '') {
 
+                bootbox.alert({
+                    message: "Please Fill Out All Fields!!!",
+                    className: 'rubberBand animated'
+                });
 
+                //alert("Please fill all fields...!!!!!!");
+                return false;
+            } 
+            else {
+                return true;
+            }
+        }
     </script>
 }
 

@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using Braintree;
 using GraysPavers.Hubs;
 using GraysPavers_DataAccess.Data;
+using GraysPavers_DataAccess.Initializer;
 using GraysPavers_DataAccess.Repository;
 using GraysPavers_DataAccess.Repository.IRepository;
 using GraysPavers_Utility;
@@ -79,6 +80,7 @@ namespace GraysPavers
             services.AddScoped<IOrderHeaderRepository, OrderHeaderRepository>();
             services.AddScoped<IOrderDetailsRepository, OrderDetailsRepository>();
             services.AddScoped<IApplicationUserRepository, ApplicationUserRepository>();
+            services.AddScoped<IDbInitializer, DbInitializer>();
 
             services.AddAuthentication().AddFacebook(opt =>
             {
@@ -107,7 +109,7 @@ namespace GraysPavers
 
         }
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IDbInitializer dbInitializer)
         {
             //app.MapSignalR();
             if (env.IsDevelopment())
@@ -128,6 +130,7 @@ namespace GraysPavers
 
             app.UseAuthentication();
             app.UseAuthorization();
+            dbInitializer.Initialize();
             app.UseSession();
 
             app.UseEndpoints(endpoints =>

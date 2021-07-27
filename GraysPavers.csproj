@@ -31,6 +31,8 @@
     <PackageReference Include="Microsoft.Owin.Security" Version="4.2.0" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="5.0.2" />
     <PackageReference Include="Stripe.net" Version="39.61.0" />
+    <PackageReference Include="SweetAlert" Version="1.0.0" />
+    <PackageReference Include="Syncfusion.EJ2.AspNet.Core" Version="19.2.0.49" />
   </ItemGroup>
 
   <ItemGroup>
